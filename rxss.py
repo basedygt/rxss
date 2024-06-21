@@ -47,7 +47,7 @@ class Rxss:
             print(error)
             return
 
-        if response.text and self.payload in response.text:
+        if self.payload in response.text:
             print(url)
             if self.output:
                 with open(self.output, "a") as f:
