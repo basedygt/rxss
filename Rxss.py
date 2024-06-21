@@ -25,6 +25,6 @@ class Rxss:
 
     return tampered_urls
 
-  def check_reflection(self, url):
-    header = {"Accept": "*/*"}
-    
+  def check_reflection(self, url, userAgent:
+    header = {"Accept": "*/*", "User-Agent": userAgent}
+    self.session.headers.update(header)
