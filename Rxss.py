@@ -3,11 +3,17 @@ from qsreplace import qsreplace
 
 class Rxss:
 
-  def __init__(self, hosts, payload, ignore_base_url=False):
+  def __init__(self, hosts, payload=["Rxss"], ignore_base_url=False, follow_redirects=False, max_redirects=5):
     self.hosts = hosts
     self.payload = payload
     self.ignore_base_url = ignore_base_url
+    self.session = requests.Session()
     
+    if not follow_redirects:
+      self.session.allow_redirects = False
+    else:
+      self.session.max_redirects = max_redirects
+  
   def _gen_tampered_urls(self):
     with open(self.hosts, "r") as f:
       url_lst = f.read().splitlines()
@@ -19,5 +25,6 @@ class Rxss:
 
     return tampered_urls
 
-if __name__ == "__main__":
-  tampered_urls = Rxss(hosts=hosts.txt, payload=["Gxss"])
+  def check_reflection(self, url):
+    header = {"Accept": "*/*"}
+    
