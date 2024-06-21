@@ -3,7 +3,7 @@ from qsreplace import qsreplace
 
 class Rxss:
 
-  def __init__(self, hosts, payload="Rxss", ignore_base_url=False, follow_redirects=False, max_redirects=5):
+  def __init__(self, hosts="crawled.txt", payload="Rxss", ignore_base_url=False, follow_redirects=False, max_redirects=5):
     self.hosts = hosts
     self.payload = payload
     self.ignore_base_url = ignore_base_url
@@ -27,7 +27,7 @@ class Rxss:
 
     return tampered_urls
 
-  def check_reflection(self, url, userAgent="Rxss"):
+  def check_reflection(self, url, userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 14.5; rv:127.0) Gecko/20100101 Firefox/127.0"):
     header = {"Accept": "*/*", "User-Agent": userAgent}
     self.session.headers.update(header)
     try:
@@ -36,7 +36,8 @@ class Rxss:
       message = f"[Vulnerable] [{url}] [Infinite Redirect Loop]"
     except Exception as err:
       error = f"[Error] [{url}] [{str(err)}]"
-    
+
+    print(response.text)
     if response:
       if self.payload in response.text:
         print(url)
