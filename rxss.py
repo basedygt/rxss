@@ -4,7 +4,7 @@ import concurrent.futures
 from qsreplace import qsreplace
 
 class Rxss:
-    def __init__(self, hosts="hosts.txt", output="rxss_out.txt", payload="rxss", ignore_base_url=False, follow_redirects=False, max_redirects=5):
+    def __init__(self, hosts="hosts.txt", payload="rxss", output=False, ignore_base_url=False, follow_redirects=False, max_redirects=5):
         self.hosts = hosts
         self.output = output
         self.payload = payload
