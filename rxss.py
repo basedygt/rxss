@@ -1,4 +1,5 @@
 import requests
+import urllib3
 import concurrent.futures
 from qsreplace import qsreplace
 
@@ -9,7 +10,10 @@ class Rxss:
         self.payload = payload
         self.ignore_base_url = ignore_base_url
         self.session = requests.Session()
-
+        
+        self.session.verify = False
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        
         if not follow_redirects:
             self.session.allow_redirects = False
         else:
