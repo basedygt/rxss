@@ -21,9 +21,9 @@ class Rxss:
     payload_lst = [self.payload]
     
     if self.ignore_base_url:
-      tampered_urls = qsreplace(url_lst, self.payload, edit_base_url=False)
+      tampered_urls = qsreplace(url_lst, payload_lst, edit_base_url=False)
     else:
-      tampered_urls = qsreplace(url_lst, self.payload, edit_base_url=True)
+      tampered_urls = qsreplace(url_lst, payload_lst, edit_base_url=True)
 
     return tampered_urls
 
