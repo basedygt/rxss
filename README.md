@@ -51,3 +51,4 @@ rxss -i hosts.txt -p "<script>alert('XSS')</script>" -o output.txt
 - Built with [Python](https://www.python.org/)
 - Utilizes [Requests](https://docs.python-requests.org/en/master/) for HTTP requests
 - [qsreplace](https://github.com/basedygt/qsreplace) for query string manipulation
+- Uses [fake_useragent](https://github.com/fake-useragent/fake-useragent) to parse arbitrary user-agent values
