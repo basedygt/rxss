@@ -4,7 +4,7 @@ import concurrent.futures
 from qsreplace import qsreplace
 
 class Rxss:
-    def __init__(self, hosts="hosts.txt", payload="rxss", output=False, ignore_base_url=False, follow_redirects=False, max_redirects=5):
+    def __init__(self, hosts="hosts.txt", payload="rxss", output=False, ignore_base_url=False, follow_redirects=False, max_redirects=5, timeout=10):
         self.hosts = hosts
         self.output = output
         self.payload = payload
@@ -19,6 +19,8 @@ class Rxss:
         else:
             self.session.max_redirects = max_redirects
 
+        self.session.timeout = timeout
+    
     def _gen_tampered_urls(self):
         with open(self.hosts, "r") as f:
             url_lst = f.read().splitlines()
@@ -41,6 +43,10 @@ class Rxss:
         except requests.exceptions.TooManyRedirects:
             vuln = f"[Vulnerable] [{url}] [Possible Infinite Redirect Loop]"
             print(vuln)
+            return
+        except requests.exceptions.Timeout:
+            error = f"[{url}] [Timed out]"
+            print(error)
             return
         except requests.exceptions.RequestException as err:
             error = f"[Error] [{url}] [{str(err)}]"
@@ -91,4 +97,7 @@ if __name__ == "__main__":
         print("  python3 rxss.py -i hosts.txt -p rxss -t 50 --timeout 5 --ignore-base-url --follow-redirects --max-redirects 5")
         return
     
-    rxss = Rxss(hosts=args.urls, payload=args.payload, output=args.output, ignore_base_url=args.ignore_base_url, follow_redirects=args.follow_redirects, max_redirects=args.max_redirects)
+    rxss = Rxss(hosts=args.urls, payload=args.payload, output=args.output, ignore_base_url=args.ignore_base_url, 
+                follow_redirects=args.follow_redirects, max_redirects=args.max_redirects, timeout=args.timeout)
+
+    rxss.check_reflections_threaded(max_threads=args.threads)
