@@ -58,12 +58,22 @@ class Rxss:
                 with open(self.output, "a") as f:
                     f.write(url + "\n")
 
-    def check_reflections_threaded(self, max_threads=50):
+    def check_reflections_threaded(self, max_threads=50, random_ua=False):
+        if random_ua:
+            try:
+                from fake_useragent import UserAgent
+            except:
+                print("[+] Fake_useragent is not installed. Run pip or pip3 install fake_useragent to fix this issue")
+                return
+    
         tampered_urls = self._gen_tampered_urls()
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_threads) as executor:
             futures = []
             for tampered_url in tampered_urls:
-                futures.append(executor.submit(self.check_reflection, tampered_url))
+                if random_ua:
+                    futures.append(executor.submit(self.check_reflection, tampered_url, UserAgent().random))
+                else:
+                    futures.append(executor.submit(self.check_reflection, tampered_url))
 
             for future in concurrent.futures.as_completed(futures):
                 try:
@@ -80,8 +90,9 @@ class Rxss:
         parser.add_argument("-t", "--threads", metavar="", type=int, default=50, help="number of threads to use (default: 50)")
         parser.add_argument("-fr", "--follow-redirects", action="store_true", default=False, help="Follow http redirects (default: False)")
         parser.add_argument("-maxr", "--max-redirects", metavar="", type=int, default=5, help="max number of redirects to follow per host (default: 5)")
-        parser.add_argument("--timeout", metavar="", type=int, default=10, help="timeout in seconds (default: 10)")
+        parser.add_argument("--timeout", metavar="", type=int, default=5, help="timeout in seconds (default: 5)")
         parser.add_argument("--ignore-base-url", action="store_true", default=False, help="Disable appending payloads to paths in base URLs (default: False)")
+        parser.add_argument("--random-user-agent", action="store_true", default=False, help="Use randomly selected HTTP User-Agent header value (default: False)")
         args = parser.parse_args()
         
         return args
@@ -95,7 +106,7 @@ def main():
     rxss = Rxss(hosts=args.urls, payload=args.payload, output=args.output, ignore_base_url=args.ignore_base_url, 
                 follow_redirects=args.follow_redirects, max_redirects=args.max_redirects, timeout=args.timeout)
 
-    rxss.check_reflections_threaded(max_threads=args.threads)
+    rxss.check_reflections_threaded(max_threads=args.threads, random_ua=args.random_user_agent)
 
 if __name__ == "__main__":
     main()
