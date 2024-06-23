@@ -10,13 +10,15 @@ class Rxss:
         self.output = output
         self.payload = payload
         self.ignore_base_url = ignore_base_url
+        self.follow_redirects = follow_redirects
         
         self.session = requests.Session()
         self.session.verify = False
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-        self.follow_redirects = follow_redirects
-        self.session.max_redirects = max_redirects
+        if self.follow_redirects:
+            self.session.max_redirects = max_redirects
+        
         self.session.timeout = timeout
     
     def _gen_tampered_urls(self):
