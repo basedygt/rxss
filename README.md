@@ -29,6 +29,7 @@ optional arguments:
                         Max number of redirects to follow per host (default: 5)
   --timeout             Timeout in seconds (default: 10)
   --ignore-base-url     Disable appending payloads to paths in base URLs (default: False)
+  --random-user-agent   Use randomly selected HTTP User-Agent header value (default: False)
 ```
 
 ### Examples
