@@ -5,21 +5,19 @@ import concurrent.futures
 from qsreplace import qsreplace
 
 class Rxss:
-    def __init__(self, hosts="hosts.txt", payload="rxss", output=False, ignore_base_url=False, follow_redirects=False, max_redirects=5, timeout=10):
+    def __init__(self, hosts="hosts.txt", payload="rxss", output=None, ignore_base_url=False, follow_redirects=False, max_redirects=5, timeout=10):
         self.hosts = hosts
         self.output = output
         self.payload = payload
         self.ignore_base_url = ignore_base_url
-        self.session = requests.Session()
         
+        self.session = requests.Session()
         self.session.verify = False
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        
         if not follow_redirects:
             self.session.allow_redirects = False
         else:
             self.session.max_redirects = max_redirects
-
         self.session.timeout = timeout
     
     def _gen_tampered_urls(self):
@@ -78,7 +76,7 @@ class Rxss:
         parser = argparse.ArgumentParser(description="Check reflecting params and paths in a bunch of URLs")
         parser.add_argument("-i", "--urls", metavar="", type=str, help="Path containing a list of URLs to scan")
         parser.add_argument("-p", "--payload", metavar="", type=str, default="rxss", help="Payload you want to send to check reflection (default: rxss)")
-        parser.add_argument("-o", "--output", metavar="", type=str, default=False, help="Path of file to write output to")
+        parser.add_argument("-o", "--output", metavar="", type=str, default=None, help="Path of file to write output to (default: None)")
         parser.add_argument("-t", "--threads", metavar="", type=int, default=50, help="number of threads to use (default: 50)")
         parser.add_argument("-fr", "--follow-redirects", action="store_true", default=False, help="Follow http redirects (default: False)")
         parser.add_argument("-maxr", "--max-redirects", metavar="", type=int, default=5, help="max number of redirects to follow per host (default: 5)")
