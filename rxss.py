@@ -69,19 +69,26 @@ class Rxss:
     def cli(self):
         import argparse
         parser = argparse.ArgumentParser(description="Check reflecting params and paths in a bunch of URLs")
-        parser.add_argument("-i", "--hosts", metavar="", type=str, help="Path containing a list of URLs to scan")
+        parser.add_argument("-i", "--urls", metavar="", type=str, help="Path containing a list of URLs to scan")
         parser.add_argument("-p", "--payload", metavar="", type=str, default="rxss", help="Payload you want to send to check reflection (default rxss)")
-        parser.add_argument("-o", "--output", metavar="", type=str, help="Path of file to write output to")
-        parser.add_argument("-t", "--threads", metavar="", type=int, help="number of threads to use (default 50)")
-        parser.add_argument("--timeout", metavar="", type=int, help="timeout in seconds (default 10)")
-        parser.add_argument("--ignore-base-url", action="store_true", help="Disable appending payloads to paths in base URLs")
-        parser.add_argument("-fr", "--follow-redirects", action="store_true", help="Follow http redirects")
+        parser.add_argument("-o", "--output", metavar="", type=str, default=False, help="Path of file to write output to")
+        parser.add_argument("-t", "--threads", metavar="", type=int, default=50, help="number of threads to use (default 50)")
+        parser.add_argument("--timeout", metavar="", type=int, default=10, help="timeout in seconds (default 10)")
+        parser.add_argument("--ignore-base-url", action="store_true", default=False, help="Disable appending payloads to paths in base URLs (default: False)")
+        parser.add_argument("-fr", "--follow-redirects", action="store_true", default=False, help="Follow http redirects (default: False)")
         parser.add_argument("-maxr", "--max-redirects", metavar="", type=int, default=5, help="max number of redirects to follow per host (default 5)")
         args = parser.parse_args()
 
         return args
 
-# Example usage:
+
 if __name__ == "__main__":
-    rxss = Rxss()
-    rxss.check_reflections_threaded()
+    args = Rxss().cli()
+    if not args.urls:
+        print("No host supplied to scan. Please use -h or --help or more info")
+        print("Examples:")
+        print("  python3 rxss.py -i hosts.txt")
+        print("  python3 rxss.py -i hosts.txt -p rxss -t 50 --timeout 5 --ignore-base-url --follow-redirects --max-redirects 5")
+        return
+    
+    rxss = Rxss(hosts=args.urls, payload=args.payload, output=args.output, ignore_base_url=args.ignore_base_url, follow_redirects=args.follow_redirects, max_redirects=args.max_redirects)
