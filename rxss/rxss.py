@@ -14,10 +14,9 @@ class Rxss:
         self.session = requests.Session()
         self.session.verify = False
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        if not follow_redirects:
-            self.session.allow_redirects = False
-        else:
-            self.session.max_redirects = max_redirects
+
+        self.follow_redirects = follow_redirects
+        self.session.max_redirects = max_redirects
         self.session.timeout = timeout
     
     def _gen_tampered_urls(self):
@@ -38,7 +37,7 @@ class Rxss:
         self.session.headers.update(header)
 
         try:
-            response = self.session.get(url)
+            response = self.session.get(url, allow_redirects=self.follow_redirects)
         except requests.exceptions.TooManyRedirects:
             vuln = f"[Vulnerable] [{url}] [Possible Infinite Redirect Loop]"
             print(vuln)
