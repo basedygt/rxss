@@ -1,3 +1,4 @@
+import sys
 import requests
 import urllib3
 import concurrent.futures
@@ -87,7 +88,6 @@ class Rxss:
 
         return args
 
-
 if __name__ == "__main__":
     args = Rxss().cli()
     if not args.urls:
@@ -95,7 +95,7 @@ if __name__ == "__main__":
         print("Examples:")
         print("  python3 rxss.py -i hosts.txt")
         print("  python3 rxss.py -i hosts.txt -p rxss -t 50 --timeout 5 --ignore-base-url --follow-redirects --max-redirects 5")
-        return
+        sys.exit(1)
     
     rxss = Rxss(hosts=args.urls, payload=args.payload, output=args.output, ignore_base_url=args.ignore_base_url, 
                 follow_redirects=args.follow_redirects, max_redirects=args.max_redirects, timeout=args.timeout)
