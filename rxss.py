@@ -88,16 +88,16 @@ class Rxss:
         
         return args
 
-if __name__ == "__main__":
+def main():
     args = Rxss().cli()
     if not args.urls:
-        print("No host supplied to scan. Please use -h or --help or more info")
-        print("Examples:")
-        print("  python3 rxss.py -i hosts.txt")
-        print("  python3 rxss.py -i hosts.txt -p rxss -t 50 --timeout 5 --ignore-base-url --follow-redirects --max-redirects 5")
+        print("No host supplied to scan. Please use -h or --help for more info")
         sys.exit(1)
     
     rxss = Rxss(hosts=args.urls, payload=args.payload, output=args.output, ignore_base_url=args.ignore_base_url, 
                 follow_redirects=args.follow_redirects, max_redirects=args.max_redirects, timeout=args.timeout)
 
     rxss.check_reflections_threaded(max_threads=args.threads)
+
+if __name__ == "__main__":
+    main()
