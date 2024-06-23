@@ -80,12 +80,12 @@ class Rxss:
         parser.add_argument("-p", "--payload", metavar="", type=str, default="rxss", help="Payload you want to send to check reflection (default rxss)")
         parser.add_argument("-o", "--output", metavar="", type=str, default=False, help="Path of file to write output to")
         parser.add_argument("-t", "--threads", metavar="", type=int, default=50, help="number of threads to use (default 50)")
-        parser.add_argument("--timeout", metavar="", type=int, default=10, help="timeout in seconds (default 10)")
-        parser.add_argument("--ignore-base-url", action="store_true", default=False, help="Disable appending payloads to paths in base URLs (default: False)")
         parser.add_argument("-fr", "--follow-redirects", action="store_true", default=False, help="Follow http redirects (default: False)")
         parser.add_argument("-maxr", "--max-redirects", metavar="", type=int, default=5, help="max number of redirects to follow per host (default 5)")
+        parser.add_argument("--timeout", metavar="", type=int, default=10, help="timeout in seconds (default 10)")
+        parser.add_argument("--ignore-base-url", action="store_true", default=False, help="Disable appending payloads to paths in base URLs (default: False)")
         args = parser.parse_args()
-
+        
         return args
 
 if __name__ == "__main__":
