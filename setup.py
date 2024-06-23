@@ -7,8 +7,8 @@ with io.open(path.join(pwd, 'README.md'), encoding='utf-8') as readme:
     desc = readme.read()
 
 setup(
-    name='Rxss',
-    version='0.0.1',
+    name='rxss',
+    version='0.0.1.post1',
     description='Tool to check reflecting params and paths in a bunch of URLs',
     long_description=desc,
     long_description_content_type='text/markdown',
