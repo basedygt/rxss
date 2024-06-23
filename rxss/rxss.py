@@ -63,7 +63,7 @@ class Rxss:
             try:
                 from fake_useragent import UserAgent
             except:
-                print("[+] Fake_useragent is not installed. Run pip or pip3 install fake_useragent to fix this issue")
+                print("[+] Fake_useragent is not installed. Run 'pip or pip3 install fake_useragent' to fix this issue")
                 return
     
         tampered_urls = self._gen_tampered_urls()
