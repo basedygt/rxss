@@ -5,10 +5,10 @@ import concurrent.futures
 from qsreplace import qsreplace
 
 class Rxss:
-    def __init__(self, hosts="hosts.txt", payload="rxss", output=None, ignore_base_url=False, follow_redirects=False, max_redirects=5, timeout=10):
+    def __init__(self, hosts="hosts.txt", payload_lst=["rxss"], output=None, ignore_base_url=False, follow_redirects=False, max_redirects=5, timeout=10):
         self.hosts = hosts
         self.output = output
-        self.payload = payload
+        self.payload_lst = payload_lst
         self.ignore_base_url = ignore_base_url
         
         self.session = requests.Session()
@@ -24,12 +24,10 @@ class Rxss:
         with open(self.hosts, "r") as f:
             url_lst = f.read().splitlines()
 
-        payload_lst = [self.payload]
-
         if self.ignore_base_url:
-            tampered_urls = qsreplace(url_lst, payload_lst, edit_base_url=False)
+            tampered_urls = qsreplace(url_lst, self.payload_lst, edit_base_url=False)
         else:
-            tampered_urls = qsreplace(url_lst, payload_lst, edit_base_url=True)
+            tampered_urls = qsreplace(url_lst, self.payload_lst, edit_base_url=True)
 
         return tampered_urls
 
@@ -88,6 +86,7 @@ class Rxss:
         parser.add_argument("-p", "--payload", metavar="", type=str, default="rxss", help="Payload you want to send to check reflection (default: rxss)")
         parser.add_argument("-o", "--output", metavar="", type=str, default=None, help="Path of file to write output to (default: None)")
         parser.add_argument("-t", "--threads", metavar="", type=int, default=50, help="number of threads to use (default: 50)")
+        parser.add_argument("-pf", "--payloads-file", metavar="", type=str, default=None, help="Path containing a list of payloads to inject")
         parser.add_argument("-fr", "--follow-redirects", action="store_true", default=False, help="Follow http redirects (default: False)")
         parser.add_argument("-maxr", "--max-redirects", metavar="", type=int, default=5, help="max number of redirects to follow per host (default: 5)")
         parser.add_argument("--timeout", metavar="", type=int, default=5, help="timeout in seconds (default: 5)")
@@ -101,9 +100,19 @@ def main():
     args = Rxss().cli()
     if not args.urls:
         print("No host supplied to scan. Please use -h or --help for more info")
-        sys.exit(1)
-    
-    rxss = Rxss(hosts=args.urls, payload=args.payload, output=args.output, ignore_base_url=args.ignore_base_url, 
+        return
+    elif args.payload and args.payloads_file:
+        print("-p or --payload and -pf or --payloads-file are mutually exclusive arguments. Please use -h or --help for more info")
+        return
+    elif args.payload:
+        payload_lst = [args.payload]
+    elif args.payload_file:
+        with open(args.payload_file, "r") as f:
+            payload_lst = f.read().splitlines()
+            try: payload_lst.remove("")
+            except: pass
+
+    rxss = Rxss(hosts=args.urls, payload_lst=payload_lst, output=args.output, ignore_base_url=args.ignore_base_url, 
                 follow_redirects=args.follow_redirects, max_redirects=args.max_redirects, timeout=args.timeout)
 
     rxss.check_reflections_threaded(max_threads=args.threads, random_ua=args.random_user_agent)
