@@ -50,11 +50,12 @@ class Rxss:
             print(error)
             return
 
-        if self.payload in response.text:
-            print(url)
-            if self.output:
-                with open(self.output, "a") as f:
-                    f.write(url + "\n")
+        for payload in payload_lst:
+            if payload in response.text:
+                print(url)
+                if self.output:
+                    with open(self.output, "a") as f:
+                        f.write(url + "\n")
 
     def check_reflections_threaded(self, max_threads=50, random_ua=False):
         if random_ua:
