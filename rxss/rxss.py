@@ -50,7 +50,7 @@ class Rxss:
             print(error)
             return
 
-        for payload in payload_lst:
+        for payload in self.payload_lst:
             if payload in response.text:
                 print(url)
                 if self.output:
