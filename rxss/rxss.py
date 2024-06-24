@@ -101,8 +101,8 @@ def main():
     if not args.urls:
         print("No host supplied to scan. Please use -h or --help for more info")
         return
-    elif args.payload and args.payloads_file:
-        print("-p or --payload and -pf or --payloads-file are mutually exclusive arguments. Please use -h or --help for more info")
+    elif args.payload is not None and args.payloads_file is not None:
+        print("Error -p or --payload and -pf or --payloads-file are mutually exclusive arguments. Please use -h or --help for more info")
         return
     elif args.payload:
         payload_lst = [args.payload]
